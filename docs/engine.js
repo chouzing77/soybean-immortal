@@ -27,7 +27,7 @@
   get clock(){const mins=Math.floor(this.hour*60);return String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');}
   get target(){return RANKS[this.level];}
   get sensitivity(){return (1+this.level*.28)*1.12;}
-  get suspicionFillTime(){return [1.5,1.2,.9,.6,.4,.2][this.level];}
+  get suspicionFillTime(){return [.5,.4,.3,.2,.1,.01][this.level];}
   get fog(){return this.count/128;}
   get noise(){return this.event?Math.max(18,this.event.noise-this.level*4):(this.theme==='night'?4:7);}
   get next(){return this.timeline[this.eventIndex]||null;}
