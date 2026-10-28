@@ -26,7 +26,7 @@
   get theme(){return this.hour>=20||this.hour<5?'night':this.hour>=18||this.hour<7?'sunset':'day';}
   get clock(){const mins=Math.floor(this.hour*60);return String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');}
   get target(){return RANKS[this.level];}
-  get sensitivity(){return 1+this.level*.18;}
+  get sensitivity(){return 1+this.level*.28;}
   get fog(){return this.count/128;}
   get noise(){return this.event?Math.max(18,this.event.noise-this.level*4):(this.theme==='night'?4:7);}
   get next(){return this.timeline[this.eventIndex]||null;}
@@ -55,11 +55,11 @@
    this.pressure=clamp(this.pressure+(5.3+this.level*.22)*dt);
    if(this.holding){this.hold+=dt;this.volume=clamp(10+54*this.hold+12*this.hold*this.hold);const vent=Math.min(this.pressure,28*dt);this.pressure-=vent;this.vented+=vent;
     const excess=this.volume-this.noise;
-    if(excess>0){this.burstExposed=true;this.exposureAge=0;const grace=this.time<this.coverUntil;const rate=(this.event?5+excess*.38:10+excess*.65)*this.sensitivity;this.suspicion=clamp(this.suspicion+rate*dt*(grace?.15:1));}
+    if(excess>0){this.burstExposed=true;this.exposureAge=0;const grace=this.time<this.coverUntil;const rate=Math.min(40+this.level*8,(this.event?14+excess*.65:28+excess*.65)*this.sensitivity);this.suspicion=clamp(this.suspicion+rate*dt*(grace?.15:1));}
     if(this.suspicion>=100){this.finish('caught');return;}
     if(this.pressure<=.01)this.release();
    }
-   if(this.exposureAge>1.2)this.suspicion=Math.max(0,this.suspicion-dt*9);
+   if(this.exposureAge>2)this.suspicion=Math.max(0,this.suspicion-dt*(6-this.level*.6));
    if(this.pressure>=100)this.finish('diarrhea');
   }
   finish(reason){if(this.state==='ended'||this.state==='caught')return;this.holding=false;this.hold=0;this.volume=0;this.reason=reason;
