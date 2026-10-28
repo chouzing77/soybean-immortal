@@ -34,7 +34,7 @@
   start(){if(this.state==='ready')this.state='playing';}
   pause(){if(this.state==='playing'){this.release();if(this.state==='playing')this.state='paused';}}
   resume(){if(this.state==='paused')this.state='playing';}
-  nextLevel(){if(this.state!=='levelup')return;this.level++;this.suspicion=0;this.exposureAge=10;this.pressure=Math.min(this.pressure,45);this.state='playing';}
+  nextLevel(){if(this.state!=='levelup')return;this.level++;this.exposureAge=10;this.pressure=Math.min(this.pressure,45);this.state='playing';}
   press(){if(this.state!=='playing'||this.holding||this.cooldown>0||this.pressure<6)return false;this.holding=true;this.hold=0;this.vented=0;this.overNoiseTime=0;this.burstExposed=false;return true;}
   release(){
    if(!this.holding||this.state!=='playing')return false;
@@ -59,7 +59,6 @@
     if(this.suspicion>=100-1e-8){this.finish('caught');return;}
     if(this.pressure<=.01)this.release();
    }
-   if(this.exposureAge>2)this.suspicion=Math.max(0,this.suspicion-dt*(6-this.level*.6));
    if(this.pressure>=100)this.finish('diarrhea');
   }
   finish(reason){if(this.state==='ended'||this.state==='caught')return;this.holding=false;this.hold=0;this.volume=0;this.reason=reason;

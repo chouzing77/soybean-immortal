@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {Game,RANKS,rankFor}=require('./dist/engine.js');
 function advance(g,seconds){for(let i=0;i<Math.round(seconds*120);i++)g.tick(1/120);}
 function tunnel(){let g=new Game(1);g.start();advance(g,3);return g;}
-test('brief quiet mistake raises suspicion gradually and releasing does not instantly lose',()=>{let g=new Game(1);g.start();g.press();advance(g,.45);assert.ok(g.suspicion>0&&g.suspicion<40);g.release();assert.equal(g.state,'playing');let before=g.suspicion;advance(g,3);assert.ok(g.suspicion<before);});
+test('brief quiet mistake raises suspicion gradually and releasing does not instantly lose',()=>{let g=new Game(1);g.start();g.press();advance(g,.45);assert.ok(g.suspicion>0&&g.suspicion<40);g.release();assert.equal(g.state,'playing');let before=g.suspicion;advance(g,3);assert.equal(g.suspicion,before);});
 test('a short covered release is safe and counts only once',()=>{let g=tunnel();g.press();advance(g,.3);g.release();g.release();assert.equal(g.suspicion,0);assert.equal(g.count,1);assert.equal(g.perfect,1);});
 test('holding beyond cover raises volume and gets caught',()=>{let g=new Game(1);g.timeline=[];g.start();g.pressure=95;g.press();advance(g,4);assert.equal(g.reason,'caught');});
 test('tiny taps do not inflate score',()=>{let g=tunnel();for(let i=0;i<5;i++){g.press();advance(g,.04);g.release();advance(g,.2);}assert.equal(g.count,0);});
@@ -18,3 +18,5 @@ test('all six levels remain beatable by timing short bursts to cover',()=>{for(l
 test('any excess volume raises suspicion immediately',()=>{for(let level=0;level<6;level++){let g=new Game(1);g.level=level;g.start();g.press();g.tick(1/120);assert.ok(g.suspicion>0);}});
 test('six levels fill from zero in exactly 1.5, 1.2, .9, .6, .4, and .2 seconds of exposure',()=>{for(let level=0;level<6;level++){let g=new Game(1);g.level=level;g.timeline=[];g.start();g.pressure=99;g.press();const duration=[1.5,1.2,.9,.6,.4,.2][level];advance(g,duration-1/120);assert.equal(g.state,'playing');assert.ok(Math.abs(g.suspicion-(100-100/duration/120))<.00001);g.tick(1/120);assert.equal(g.state,'caught');assert.equal(g.reason,'caught');assert.equal(g.suspicion,100);}});
 test('stopping exposure immediately stops suspicion growth without clearing accumulated suspicion',()=>{let g=new Game(1);g.start();g.press();advance(g,.2);g.release();const before=g.suspicion;advance(g,.5);assert.equal(g.suspicion,before);});
+
+test('suspicion persists through safe waiting, level transitions and pause; only new run clears it',()=>{let g=tunnel();g.suspicion=37;advance(g,3);assert.equal(g.suspicion,37);g.state='levelup';g.nextLevel();assert.equal(g.suspicion,37);g.pause();advance(g,4);g.resume();assert.equal(g.suspicion,37);g.reset();assert.equal(g.suspicion,0);});
