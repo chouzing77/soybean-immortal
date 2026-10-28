@@ -30,6 +30,7 @@
  <main>
   <div class="level-bar"><span id="level-label">第 1 关</span><div class="level-goal"><span id="level-count">0 / 10 次</span></div></div>
   <section class="game" aria-label="黄豆仙人游戏">
+   <div class="start-cover" id="start-cover"><button class="start-button" id="start-game"><svg aria-hidden="true"><use href="#i-play"/></svg><span>上车，出发</span></button></div>
    <div class="scene-wrap" id="scene-wrap">
     <canvas id="scene" width="1200" height="500" role="img" aria-label="高铁二等座车厢：你坐在中间，身旁是各有心事的乘客，窗外风景不断掠过。"></canvas>
     <div class="scene-hud"><div class="trip"><span>窗外时刻</span><strong id="time">16:00</strong><button class="mini-btn" id="pause" aria-label="暂停游戏" disabled><svg><use href="#i-pause"/></svg></button></div></div>
@@ -44,7 +45,7 @@
    </div>
    <div class="console">
     <div class="pressure-module"><div class="module-label"><span><svg><use href="#i-bean"/></svg> 肚子压力</span><strong><b id="pressure-value">32</b><small> / 100</small></strong></div><div class="meter pressure-meter"><i id="pressure-bar"></i><span></span><span></span><span></span></div><div class="meter-caption"><span id="pressure-caption">目前还能忍</span><span>极限</span></div></div>
-    <div class="action-module"><button class="release-btn" id="release"><svg id="release-icon"><use href="#i-arrow"/></svg><span id="release-label">上车，出发</span></button><span class="key-hint" id="key-hint">按住 <kbd>空格</kbd> 或按钮释放 · 松开憋住</span></div>
+    <div class="action-module"><button class="release-btn" id="release"><svg id="release-icon"><use href="#i-wind"/></svg><span id="release-label">按住，悄悄放</span></button><span class="key-hint" id="key-hint">按住 <kbd>空格</kbd> 或按钮释放 · 松开憋住</span></div>
     <div class="volume-module"><div class="module-label"><span><svg><use href="#i-wind"/></svg> 放屁音量</span><strong id="volume-status">蓄势待发</strong></div><div class="meter volume-meter" id="volume-meter"><i id="volume-bar"></i><span class="noise-limit" id="noise-limit"></span></div><div class="meter-caption"><span>轻轻的</span><span class="limit-caption">│ 环境掩护</span><span>惊天动地</span></div></div>
    </div>
   </section>
