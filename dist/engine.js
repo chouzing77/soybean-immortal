@@ -27,7 +27,7 @@
   get clock(){const mins=Math.floor(this.hour*60);return String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');}
   get target(){return RANKS[this.level];}
   get sensitivity(){return (1+this.level*.28)*1.12;}
-  get reactionTime(){return .35-this.level*.05;}
+  get suspicionFillTime(){return 3-this.level*.5;}
   get fog(){return this.count/128;}
   get noise(){return this.event?Math.max(18,this.event.noise-this.level*4):(this.theme==='night'?4:7);}
   get next(){return this.timeline[this.eventIndex]||null;}
@@ -55,8 +55,8 @@
    this.pressure=clamp(this.pressure+(5.3+this.level*.22)*dt);
    if(this.holding){this.hold+=dt;this.volume=clamp(10+54*this.hold+12*this.hold*this.hold);const vent=Math.min(this.pressure,28*dt);this.pressure-=vent;this.vented+=vent;
     const excess=this.volume-this.noise;
-    if(excess>0){this.burstExposed=true;this.exposureAge=0;const before=this.overNoiseTime;this.overNoiseTime+=dt;const exposed=Math.max(0,this.overNoiseTime-this.reactionTime)-Math.max(0,before-this.reactionTime);const rate=Math.min(100+this.level*16,80+this.level*14+excess*.4);this.suspicion=clamp(this.suspicion+rate*exposed);}else this.overNoiseTime=0;
-    if(this.suspicion>=100){this.finish('caught');return;}
+    if(excess>0){this.burstExposed=true;this.exposureAge=0;this.suspicion=clamp(this.suspicion+100/this.suspicionFillTime*dt);}
+    if(this.suspicion>=100-1e-8){this.finish('caught');return;}
     if(this.pressure<=.01)this.release();
    }
    if(this.exposureAge>2)this.suspicion=Math.max(0,this.suspicion-dt*(6-this.level*.6));
